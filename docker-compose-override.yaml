@@ -1,0 +1,19 @@
+#version: '3'
+#
+#services:
+#  #NGNIX server
+#  web:
+#
+#
+#  #PHP Of course :-)
+#  php:
+#
+#
+#  #MySql
+#  mydockersql:
+#
+#
+#
+#  #Tools needed (composer,...)
+#  tools:
+#
