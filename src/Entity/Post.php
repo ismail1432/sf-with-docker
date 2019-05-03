@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Legacy\Normalizer\AbstractLegacyNormalizer;
+use App\Legacy\Normalizer\PostNormalizer;
 use App\Legacy\Entity\SynchronizeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -10,6 +12,11 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Post implements SynchronizeInterface
 {
+    public function __construct()
+    {
+        $this->parutionDate = new \DateTime();
+    }
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -23,9 +30,30 @@ class Post implements SynchronizeInterface
     private $title;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
     private $content;
+
+    /**
+     * @ORM\Column(type="datetime")
+     */
+    private $parutionDate;
+
+    /**
+     * @return mixed
+     */
+    public function getParutionDate(): \DateTimeInterface
+    {
+        return $this->parutionDate;
+    }
+
+    /**
+     * @param mixed $parutionDate
+     */
+    public function setParutionDate($parutionDate): void
+    {
+        $this->parutionDate = $parutionDate;
+    }
 
     public function getId(): ?int
     {
@@ -56,9 +84,8 @@ class Post implements SynchronizeInterface
         return $this;
     }
 
-    public function convertToLegacy(): \Iterator
+    public function getFQCNNormalizer(): string
     {
-        yield ['title' => 'titre'];
-        yield ['content' => 'contenu'];
+        return PostNormalizer::class;
     }
 }

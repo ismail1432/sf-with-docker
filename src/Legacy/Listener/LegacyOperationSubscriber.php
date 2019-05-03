@@ -4,18 +4,26 @@
 namespace App\Legacy\Listener;
 
 
+use App\Legacy\Normalizer\AbstractLegacyNormalizer;
+use App\Legacy\Normalizer\NormalizerFactory;
+use App\Legacy\Entity\SynchronizeInterface;
+use App\Legacy\LegacyPostManager;
 use Doctrine\Common\EventSubscriber;
 use Doctrine\Common\Persistence\Event\LifecycleEventArgs;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Events;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class LegacyOperationSubscriber implements EventSubscriber
 {
     private $legacyManager;
+    private $factory;
+    private $propertyAccessor;
 
-    public function __construct(EntityManagerInterface $manager)
+    public function __construct(LegacyPostManager $manager, PropertyAccessorInterface $propertyAccessor, NormalizerFactory $factory)
     {
-        $this->legacyManager = $manager->getConnection('legacy');
+        $this->legacyManager = $manager;
+        $this->factory = $factory;
+        $this->propertyAccessor = $propertyAccessor;
     }
 
     public function getSubscribedEvents()
@@ -27,11 +35,14 @@ class LegacyOperationSubscriber implements EventSubscriber
 
     public function postPersist(LifecycleEventArgs $args)
     {
+        /** @var SynchronizeInterface $object */
+        $object = $args->getObject();
 
-    }
+        /** @var AbstractLegacyNormalizer $normalizer */
+        $normalizer = $this->factory::createNormalizer($this->propertyAccessor, $object->getFQCNNormalizer());
 
-    private function synchronize(LifecycleEventArgs $args, $operation)
-    {
+        $legacyObject = $normalizer->normalize($object);
 
+        $this->legacyManager->persistAndFlush($legacyObject, true);
     }
 }

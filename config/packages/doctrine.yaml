@@ -8,7 +8,6 @@ parameters:
 doctrine:
     dbal:
         default_connection: default
-        # configure these for your database server
         connections:
             default:
                 driver: 'pdo_mysql'
@@ -27,6 +26,7 @@ doctrine:
                     charset: utf8mb4
                     collate: utf8mb4_unicode_ci
                 url: '%env(resolve:LEGACY_DATABASE_URL)%'
+
     orm:
         auto_generate_proxy_classes: true
         default_entity_manager: default
@@ -47,9 +47,9 @@ doctrine:
                 connection: legacy
                 naming_strategy: doctrine.orm.naming_strategy.underscore
                 mappings:
-                    App:
+                    Legacy:
                         is_bundle: false
                         type: annotation
-                        dir: '%kernel.project_dir%/src/Entity'
-                        prefix: 'App\Entity'
-                        alias: App
+                        dir: '%kernel.project_dir%/src/Legacy/Entity'
+                        prefix: 'App\Legacy\Entity'
+                        alias: Legacy

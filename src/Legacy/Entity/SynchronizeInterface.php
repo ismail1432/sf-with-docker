@@ -4,7 +4,10 @@
 namespace App\Legacy\Entity;
 
 
+
+use App\Legacy\Normalizer\AbstractLegacyNormalizer;
+
 interface SynchronizeInterface
 {
-    public function convertToLegacy(): \Iterator;
+    public function getFQCNNormalizer(): string ;
 }
