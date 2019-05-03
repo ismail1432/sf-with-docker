@@ -16,8 +16,8 @@ class PostController extends AbstractController
     {
         $post = new Post();
 
-        $post->setcontent("My content")
-            ->setTitle("My title");
+        $post->setcontent("My new content")
+            ->setTitle("My new title");
 
         $manager->persist($post);
         $manager->flush();

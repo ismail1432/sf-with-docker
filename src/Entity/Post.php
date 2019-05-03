@@ -2,15 +2,14 @@
 
 namespace App\Entity;
 
-use App\Legacy\Normalizer\AbstractLegacyNormalizer;
+use App\Legacy\Normalizer\LegacyNormalizerInterface;
 use App\Legacy\Normalizer\PostNormalizer;
-use App\Legacy\Entity\SynchronizeInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PostRepository")
  */
-class Post implements SynchronizeInterface
+class Post implements LegacyNormalizerInterface
 {
     public function __construct()
     {

@@ -4,35 +4,32 @@
 namespace App\Legacy\Normalizer;
 
 
-use App\Legacy\Entity\SynchronizeInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
-abstract class AbstractLegacyNormalizer
+abstract class AbstractNormalizer
 {
     private $propertyAccessor;
 
-    public function __construct(PropertyAccessor $propertyAccessor)
+    public function __construct(PropertyAccessorInterface $propertyAccessor)
     {
         $this->propertyAccessor = $propertyAccessor;
     }
 
-    /**
-     * Transform default Object to Legacy Object
-     */
-    public function normalize(SynchronizeInterface $object)
+    public function normalize($object)
     {
         $legacyObject = $this->getLegacyObject();
 
         foreach ($this->convertToLegacy() as $default => $legacy) {
 
             $value = $this->propertyAccessor->getValue($object, $default);
+
             $this->propertyAccessor->setValue($legacyObject, $legacy, $value);
         }
 
         return $legacyObject;
     }
 
-    abstract public function convertToLegacy(): \Iterator;
+    public abstract function convertToLegacy(): \Iterator;
 
-    abstract public function getLegacyObject();
+    public abstract function getLegacyObject();
 }
